@@ -66,7 +66,7 @@ params('adam')
     yparams = {'cost', 'val_cost', 'acc_tr', 'acc_val','gnorm'};
     xparams = {'time', 'epoch'};
     plot_params.sort = yparams{1};
-    plot_params.y = yparams{1};
+    plot_params.y = yparams{5};
     plot_params.x = xparams{1};
     
     

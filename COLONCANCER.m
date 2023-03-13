@@ -1,11 +1,11 @@
-function data = REALSIM(seed,reg,ler)
+function data = COLONCANCER(seed,reg,ler)
 
-    M = load('realsim.mat'); 
+    M = load('colon_cancer.mat'); 
     %data matrix M loads four files (x_train, y_train, x_test, y_test)
-    
-    [n,d] = size(M.X);
+%     M.x_train = M.x_train'*M.x_train;
+    [n,d] = size(M.x_train);
 
-    D = full(M.X);
+    D = full(M.x_train);
     
     %Data normalization (0 mean, unit varianve)
     s = std(D);
@@ -15,10 +15,10 @@ function data = REALSIM(seed,reg,ler)
     
     D = [D  ones(n,1)];
     
-    rng('default');
+    rng(seed);
     perm = randperm(n);
     A =  D(perm,:);
-    B = M.y(perm);
+    B = M.y_train(perm)';
     f = floor(n/5);
 
     idx = f*(seed-1)+1:f*seed;

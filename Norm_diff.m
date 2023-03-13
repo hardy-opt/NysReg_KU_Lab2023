@@ -1,10 +1,10 @@
 clear;
 close all;
 
-darg = 'REALSIM';
-reg = 1e-5;
-e = 6; % epoch
-times = 3;
+darg = 'ADULT';
+reg = 0;
+e = 130; % epoch
+times = 1;
 
 
 
@@ -27,8 +27,9 @@ problem = logistic_regressionLM(data.x_train, data.y_train, data.x_test, data.y_
 
 [n,d] = size(data.x_train');
 
-update = 2000;%ceil(d*0.05);
-m=500;
+updated = 1;
+update=1;%ceil(d*0.05);
+m=1;
 mcolsr = m;
 xa = 1:1:e+1; % e is max epoch
 
@@ -61,6 +62,7 @@ delta = 1; % multiplied of hessian regularizer
 
 % g = problem.full_grad(w);
 H = problem.full_hess(w);
+roh=rank(H)
 Hnrm = norm(H);
 % Hinv = inv(H);
 % Hinrm = norm(Hinv);
@@ -215,6 +217,7 @@ Diago = eye(d);
         %     nm_p = norm((Hp) - (Ap));
         %     Np = [Np nm_p];
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            rng(i*j)
             v = randperm(d,m);
             v = sort(v);
 
@@ -226,8 +229,12 @@ Diago = eye(d);
              [Z,~,msv] = problem.app_hess(w,1:n,v,0);
              Apk = Z*Z';
             tp=toc;
+            rz=rank(Z);
+            fprintf('rank(Z)=%d, m=%d\n',rz,m);
             tpn = tpn+tp;
-            
+%             if rz==roh
+%                 flag=j;
+%             end
             Np =[Np (norm(H - (Apk)))];
             Gp = [Gp tpn];
 %             PNr = pinv(H*S)';
@@ -364,9 +371,16 @@ Diago = eye(d);
         %     hold on;
 
             m = m+update;
-            if m>d
-                m=d;
+
+            
+            
+            if m>d || m==d
+                m=d-1;
             end
+            
+%             if flag==j
+%                 m=d;
+%             end
 
             if 4*m>n %8*
                 mcolsr= n;%m-update;
@@ -375,7 +389,7 @@ Diago = eye(d);
             end
             
             mvec = [mvec m];
-            
+            fprintf('epoch= i =%d, and runtime = j = %d\n',i,j);
         end
 
 % figure(F1)
@@ -406,7 +420,7 @@ if j==times
 
             figure(F2);
 %             semilogy(xa(1:i),AvNp,'-.pk',xa(1:i),AvNq,'--om',xa(1:i),AvNr,'-sc','LineWidth',1.5);
-            semilogy(mvec(:,2:end),AvNp,'-.pk',mvec(:,2:end),AvNq,'--om',mvec(:,2:end),AvNr,'-sc','LineWidth',1.8);
+            semilogy(mvec(:,1:end-1),AvNp,'-.pk',mvec(:,1:end-1),AvNq,'--om',mvec(:,1:end-1),AvNr,'-sc','LineWidth',1.8);
 
             hold on;
 
@@ -434,7 +448,7 @@ ax = gca;
 ax.FontSize = 13;
 xlabel('m-columns') 
 ylabel('$\| H - B \|$','interpreter','latex') 
-title('$\lambda = 1e-5$','interpreter','latex');
+%title('$\lambda = 1e-5$','interpreter','latex');
 
 figure(F3)
 legend({'Nystrom','NS','NS(4m)'},'Location','southeast')
@@ -443,7 +457,7 @@ ax = gca;
 ax.FontSize = 13;
 xlabel('m-columns') 
 ylabel('CPU time') 
-title('$\lambda = 1e-5$','interpreter','latex');
+%title('$\lambda = 1e-5$','interpreter','latex');
 % 
 % figure(F4)
 % % xticklabels({'1','1000','2000','3000','4000','5000'})
@@ -895,6 +909,8 @@ function [data]=loaddataa(s,reg,step,dat)
     data = IJCNN(s,reg,step);
     elseif strcmp(strs{end}, 'RCV1')
     data = RCV1(s,reg,step);
+    elseif strcmp(strs{end}, 'COLONCANCER')
+        data = COLONCANCER(s,reg,step);
     else
         disp('Dataset tho de');
     end

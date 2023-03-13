@@ -6,8 +6,8 @@ function data = W8A(seed,reg,ler)
     [n,d] = size(M.x_train);
 
     D = M.x_train;
-    
-    %Data normalization (0 mean, unit varianve)
+%     
+%     Data normalization (0 mean, unit varianve)
     s = std(D);
     s(s==0)=1;
     m=mean(D);
@@ -21,6 +21,9 @@ function data = W8A(seed,reg,ler)
     B = M.y_train(perm);
     data.x_train = A';
     data.y_train = B';
+    
+%     data.x_train = D';
+%     data.y_train = M.y_train';
     
     fprintf('This is W8A train data with n=%d, d=%d\n',size(data.x_train'));
 
@@ -39,12 +42,17 @@ function data = W8A(seed,reg,ler)
     data.x_test =  P(perm,:)';
     data.y_test = M.y_test(perm)';
 
+% 
+%     data.x_test = M.x_test';
+%     data.y_test = M.y_test';
+
 
     fprintf('This is W8A test data with n=%d, d=%d\n',size(data.x_test'));
 
     %Initial point with different random seed
     rng(seed);
     w = zeros(d+1,1);
+%     w = zeros(d,1);
     %w = w./norm(w);
     data.w_init = w;
 
