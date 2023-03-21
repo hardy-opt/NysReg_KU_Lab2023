@@ -420,7 +420,11 @@ if j==times
 
             figure(F2);
 %             semilogy(xa(1:i),AvNp,'-.pk',xa(1:i),AvNq,'--om',xa(1:i),AvNr,'-sc','LineWidth',1.5);
+<<<<<<< HEAD
             semilogy(mvec(:,1:end-1),AvNp,'-.pk',mvec(:,1:end-1),AvNq,'--om',mvec(:,1:end-1),AvNr,'-sc','LineWidth',1.8);
+=======
+            semilogy(mvec(:,2:end),AvNp,'-.pk',mvec(:,2:end),AvNq,'--om',mvec(:,2:end),AvNr,'-sc','LineWidth',1.8,'MarkerSize',10);
+>>>>>>> master
 
             hold on;
 
@@ -430,7 +434,7 @@ if j==times
 %             hold on;
 
             figure(F3);
-            semilogy(mvec,AvGp,'-.pk',mvec,AvGq,'--om',mvec,AvGr,'--sc','LineWidth',1.8);
+            semilogy(mvec,AvGp,'-.pk',mvec,AvGq,'--om',mvec,AvGr,'--sc','LineWidth',1.8,'MarkerSize',10);
             hold on;
 
 % 
@@ -443,20 +447,28 @@ if j==times
 
 figure(F2)
 % xticklabels({'1',' ','1000',' ','2000',' ','3000','','d'})
-legend({'Nystrom','NS','NS(4m)'},'Location','southeast')
+legend({'Nystrom','NS','NS (4m)'},'Location','southeast')
 ax = gca;
 ax.FontSize = 13;
 xlabel('m-columns') 
+<<<<<<< HEAD
 ylabel('$\| H - B \|$','interpreter','latex') 
+=======
+ylabel('$\| H - N \|\ $ (log scale)','interpreter','latex') 
+>>>>>>> master
 %title('$\lambda = 1e-5$','interpreter','latex');
 
 figure(F3)
-legend({'Nystrom','NS','NS(4m)'},'Location','southeast')
+legend({'Nystrom','NS','NS (4m)'},'Location','southeast')
 % xticklabels({'1','1000','2000','3000','4000','5000'})
 ax = gca;
 ax.FontSize = 13;
 xlabel('m-columns') 
+<<<<<<< HEAD
 ylabel('CPU time') 
+=======
+ylabel('CPU time (seconds) (log scale)') 
+>>>>>>> master
 %title('$\lambda = 1e-5$','interpreter','latex');
 % 
 % figure(F4)
@@ -500,12 +512,40 @@ Info.mvec = mvec';
 Name = sprintf('%s/%s_NS_comp_%.d.mat','/home/optima/Desktop/Nys_Newton23',darg,reg);
 
 
-save(Name,'Info');
+%save(Name,'Info'); %Uncomment when you start running the program
 
 %If you lose FIGURE, load the save file and RUN (figure 2) Norm diff >RUN
-%semilogy(Info.mvec(2:end,:),Info.AvNp,'-.pk',Info.mvec(2:end,:),Info.AvNq,'--om',Info.mvec(2:end,:),Info.AvNr,'-sc','LineWidth',1.5);
+fs = 22;
+fss=32;
+endd=length(Info.mvec)-1;
+iter=length(Info.AvNp)-0;
+semilogy(Info.mvec(1:endd,:),Info.AvNp(1:iter),'-.pk',Info.mvec(1:endd,:),Info.AvNq(1:iter),'--om',Info.mvec(1:endd,:),Info.AvNr(1:iter),'-sc','LineWidth',2,'MarkerSize',10)%,'MarkerIndices', 1:2:123);
+legend({'Nystrom','NS','NS (4m)'},'Location','northoutside','FontSize',fs)
+ax = gca;
+ax.FontSize = fs;
+xlabel('m-columns','FontSize',fss) 
+ylabel('$\| H - N \|\ $ (log scale)','interpreter','latex','FontSize',fss)
+%title('$\lambda = 10^{-5}$','interpreter','latex','FontSize',fss);
+%ylim([0,11]); %for realsim
+
+
+
 %For Figure 3
-%semilogy(Info.mvec,Info.AvGp,'-.pk',Info.mvec,Info.AvGq,'--om',Info.mvec,Info.AvGr,'--sc','LineWidth',1.5);
+fs=22;
+fss=32;
+endd=length(Info.mvec)-1;
+%plot(Info.mvec,Info.AvGp,'-.pk',Info.mvec,Info.AvGq,'--om',Info.mvec,Info.AvGr,'--sc','LineWidth',2,'MarkerSize',10); hold on;
+semilogy(Info.mvec(1:endd),Info.AvGp(2:end-0),'-.pk',Info.mvec(1:endd),Info.AvGq(2:end-0),'--om',Info.mvec(1:endd),Info.AvGr(2:end-0),'--sc','LineWidth',2,'MarkerSize',10)%,'MarkerIndices', 1:2:123);
+legend({'Nystrom','NS','NS (4m)'},'Location','southeast','FontSize',fs)
+% xticklabels({'1','1000','2000','3000','4000','5000'})
+ax = gca;
+ax.FontSize = fs;
+xlabel('m-columns','FontSize',fss) 
+ylabel('CPU time (log scale)','FontSize',fss) 
+%title('$\lambda = 10^{-5}$','interpreter','latex','FontSize',fs);
+
+%set(gca, 'YScale', 'log')
+
 %and do run title and legends
 
 
